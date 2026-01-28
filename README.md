@@ -2,18 +2,31 @@
 
 A Laravel application with Docker, featuring user authentication and CRUD operations.
 
+## Requirements
+
+- Docker & Docker Compose
+
 ## Quick Start
 
 ```bash
-# Start the containers
+# 1. Clone the repo
+git clone https://github.com/Kong-SnS/php-mysql-demo.git
+cd php-mysql-demo
+
+# 2. Start Docker containers
 docker-compose up -d
 
-# Run migrations (first time only)
+# 3. Install PHP dependencies
+docker exec laravel_web composer install
+
+# 4. Run database migrations
 docker exec laravel_web php artisan migrate
 
-# Access the app
+# 5. Open in browser
 open http://localhost:8080
 ```
+
+No additional configuration needed - `.env` is included for demo purposes.
 
 ## Docker Architecture
 
