@@ -17,9 +17,26 @@ cd php-mysql-demo
 docker-compose up -d
 
 # 3. Install PHP dependencies
-docker exec laravel_web composer install
+docker run --rm -v "$PWD/src:/app" -w /app composer install
 
-# 4. Run database migrations
+# 4. Overwrites Apache config
+docker exec -it laravel_web bash -c "cat > /etc/apache2/sites-available/000-default.conf << 'EOF'
+<VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot /var/www/html/public
+
+    <Directory /var/www/html/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+EOF
+apachectl restart"
+
+# 5. Run database migrations
 docker exec laravel_web php artisan migrate
 
 # 5. Open in browser
